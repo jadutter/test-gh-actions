@@ -33,7 +33,7 @@ jobs:
       - name: ImageMagick Action
         uses: jruipinto/ImageMagick-action@v1
           # ImageMagick command to be executed
-        run: |
+        command: |
           magick -size 320x120 xc:lightblue \
            -draw "font Impact  font-size 72 \
                   fill ${{ matrix.color }}  stroke navy  stroke-width 2 \
