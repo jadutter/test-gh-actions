@@ -17,6 +17,7 @@ jobs:
           echo 'colors=["red", "green", "blue"]' >> "$GITHUB_OUTPUT"
 
   produce-artifacts:
+    name: Produce
     runs-on: ubuntu-20.04
     needs: define-matrix
     strategy:
@@ -28,14 +29,16 @@ jobs:
         env:
           color: ${{ matrix.color }}
         run: |
-          echo "$color" > color
-      - name: Produce Artifact
+          echo "the current color is '$color'" > color.txt
+      - name: Produce Artifact - ${{ matrix.color }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.color }}
-          path: color
+          path: color.txt
+          retention-days: 5
 
   consume-artifacts:
+    name: Consume
     runs-on: ubuntu-20.04
     needs:
     - define-matrix
@@ -45,11 +48,11 @@ jobs:
         color: ${{ fromJSON(needs.define-matrix.outputs.colors) }}
 
     steps:
-    - name: Retrieve Artifact
+    - name: Retrieve Artifact - ${{ matrix.color }}
       uses: actions/download-artifact@v4
       with:
         name: ${{ matrix.color }}
 
     - name: Report Color
       run: |
-        cat color
+        cat color.txt
