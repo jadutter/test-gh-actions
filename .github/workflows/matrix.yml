@@ -11,7 +11,9 @@ jobs:
       colors: ${{ steps.colors.outputs.colors }}
 
     steps:
-      - uses: mfinelli/setup-imagemagick@v5
+      - name: Setup ImageMagick
+        uses: mfinelli/setup-imagemagick@v5
+        run: magick -size 320x120 xc:lightblue  -draw "font Impact  font-size 72  fill purple  stroke navy  stroke-width 2  translate 0,80  text 0,0 ' test '"  test-draw.png
       - name: Define Colors
         id: colors
         run: |
