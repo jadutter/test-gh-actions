@@ -1,5 +1,6 @@
 name: Matrix Workflow
 on:
+  push:
   workflow_dispatch:
   workflow_call:
 
@@ -10,6 +11,8 @@ jobs:
     steps:
       - name: Setup ImageMagick
         uses: mfinelli/setup-imagemagick@v5
+      - name: List Fonts
+        run: magick -list font
       - name: Create Test Image
         run: magick -size 320x120 xc:lightblue  -draw "font sans-serif  font-size 72  fill purple  stroke navy  stroke-width 2  translate 0,80  text 0,0 ' test '"  test-draw.png
       - name: Produce test-draw.png
