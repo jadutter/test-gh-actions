@@ -8,10 +8,10 @@ on:
 jobs:
   core:
     name: Core Job
-    uses: jadutter/test-gh-actions/.github/workflows/core.yml@develop
+    uses: jadutter/test-gh-actions/.github/workflows/core.yml
   matrix:
     name: Matrix Job
-    uses: jadutter/test-gh-actions/.github/workflows/matrix.yml@develop
+    uses: jadutter/test-gh-actions/.github/workflows/matrix.yml
   release:
     name: Release Job
     needs: [core, matrix]
