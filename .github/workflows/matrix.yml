@@ -1,12 +1,11 @@
 name: Matrix Workflow
 on:
-  push:
   workflow_dispatch:
   workflow_call:
 
 jobs:
   setup-magick:
-    name: Setup Magick
+    name: Check Magick
     runs-on: ubuntu-20.04
     steps:
       - name: Setup ImageMagick
@@ -24,7 +23,6 @@ jobs:
   define-matrix:
     name: Define Matrix
     runs-on: ubuntu-20.04
-    needs: setup-magick
     outputs:
       colors: ${{ steps.colors.outputs.colors }}
     steps:
@@ -36,7 +34,9 @@ jobs:
   produce-artifacts:
     name: Produce
     runs-on: ubuntu-20.04
-    needs: define-matrix
+    needs: 
+      - define-matrix
+      - setup-magick
     strategy:
       matrix:
         color: ${{ fromJSON(needs.define-matrix.outputs.colors) }}
