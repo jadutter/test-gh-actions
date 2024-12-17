@@ -93,6 +93,7 @@ jobs:
   collate-artifacts:
     name: Collate
     runs-on: ubuntu-20.04
+    if: ${{ always() }}
     needs:
       - define-matrix
       - produce-artifacts
@@ -110,6 +111,7 @@ jobs:
   clean-artifacts:
     name: Clean
     runs-on: ubuntu-20.04
+    if: ${{ always() }}
     needs:
       - define-matrix
       - consume-artifacts
