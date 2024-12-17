@@ -1,0 +1,20 @@
+name: Core
+on:
+  workflow_dispatch: {}
+  workflow_call: {}
+  push:
+    branches:
+      - develop
+  pull_request: {}
+
+jobs:
+  test:
+    name: Placeholder for Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Get Name
+        run: which uname && uname -a

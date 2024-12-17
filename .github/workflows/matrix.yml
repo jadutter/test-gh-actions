@@ -1,15 +1,15 @@
-name: shared matrix
+name: Matrix
 on:
   push:
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   define-matrix:
+    name: Define Matrix
     runs-on: ubuntu-20.04
-
     outputs:
       colors: ${{ steps.colors.outputs.colors }}
-
     steps:
       - name: Define Colors
         id: colors
@@ -23,7 +23,6 @@ jobs:
     strategy:
       matrix:
         color: ${{ fromJSON(needs.define-matrix.outputs.colors) }}
-
     steps:
       - name: Define Color
         env:
@@ -41,18 +40,16 @@ jobs:
     name: Consume
     runs-on: ubuntu-20.04
     needs:
-    - define-matrix
-    - produce-artifacts
+      - define-matrix
+      - produce-artifacts
     strategy:
       matrix:
         color: ${{ fromJSON(needs.define-matrix.outputs.colors) }}
-
     steps:
-    - name: Retrieve Artifact - ${{ matrix.color }}
-      uses: actions/download-artifact@v4
-      with:
-        name: ${{ matrix.color }}
-
-    - name: Report Color
-      run: |
-        cat color.txt
+      - name: Retrieve Artifact - ${{ matrix.color }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.color }}
+      - name: Report Color
+        run: |
+          cat color.txt
