@@ -75,6 +75,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs:
       - define-matrix
+      - consume-artifacts
       - collate-artifacts
     strategy:
       matrix:
