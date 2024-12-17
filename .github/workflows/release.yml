@@ -1,4 +1,4 @@
-name: Core
+name: Release Workflow
 on:
   workflow_dispatch: {}
   workflow_call: {}
@@ -13,7 +13,7 @@ jobs:
   matrix:
     uses: jadutter/test-gh-actions/.github/workflows/matrix.yml@develop
   release:
-    name: Release
+    name: Release Job
     needs: [core, matrix]
     runs-on: ubuntu-latest
     steps:
@@ -23,5 +23,5 @@ jobs:
               persist-credentials: false
               fetch-depth: '0'
 
-        - name: Release
+        - name: Release Step
           run: echo 'release the latest version'
