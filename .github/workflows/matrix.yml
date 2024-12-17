@@ -33,7 +33,8 @@ jobs:
         with:
           name: ${{ matrix.color }}
           path: color.txt
-          retention-days: 5
+          retention-days: 1
+          # if-no-files-found: ignore
 
   consume-artifacts:
     name: Consume
@@ -52,3 +53,19 @@ jobs:
       - name: Report Color
         run: |
           cat color.txt
+
+  collate-artifacts:
+    name: Collate
+    runs-on: ubuntu-20.04
+    needs:
+      - define-matrix
+      - produce-artifacts
+    steps:
+      - name: Retrieve Artifacts
+        uses: actions/download-artifact@v4
+      - name: Save Artifacts 
+        uses: actions/upload-artifact@v4
+        with:
+          name: colors
+          path: ${{ github.workspace }}/artifact/*/color.txt
+          retention-days: 1
