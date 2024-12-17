@@ -69,3 +69,19 @@ jobs:
           path: ${{ github.workspace }}/*/color.txt
           retention-days: 1
           if-no-files-found: error
+
+  clean-artifacts:
+    name: Clean
+    runs-on: ubuntu-20.04
+    needs:
+      - define-matrix
+      - collate-artifacts
+    strategy:
+      matrix:
+        color: ${{ fromJSON(needs.define-matrix.outputs.colors) }}
+    steps:
+      - name: Clean Artifact - ${{ matrix.color }}
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: ${{ matrix.color }}
+
