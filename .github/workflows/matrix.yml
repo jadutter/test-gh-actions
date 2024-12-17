@@ -11,9 +11,6 @@ jobs:
       colors: ${{ steps.colors.outputs.colors }}
 
     steps:
-      - name: Setup ImageMagick
-        uses: mfinelli/setup-imagemagick@v5
-        command: magick -size 320x120 xc:lightblue  -draw "font Impact  font-size 72  fill purple  stroke navy  stroke-width 2  translate 0,80  text 0,0 ' test '"  test-draw.png
       - name: Define Colors
         id: colors
         run: |
@@ -33,22 +30,12 @@ jobs:
           color: ${{ matrix.color }}
         run: |
           echo "the current color is '$color'" > color.txt
-      - name: ImageMagick Action
-        with: 
-          command: magick -size 320x120 xc:lightblue  -draw "font Impact  font-size 72  fill ${{ matrix.color }}  stroke navy  stroke-width 2  translate 0,80  text 0,0 ' ${{ matrix.color }} '"  draw.png
-      - name: Upload text - ${{ matrix.color }}
+      - name: Produce Artifact - ${{ matrix.color }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.color }}
           path: color.txt
           retention-days: 5
-      - name: Upload image - ${{ matrix.color }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: draw-${{ matrix.color }}
-          path: draw.png
-          retention-days: 5
-
 
   consume-artifacts:
     name: Consume
@@ -61,20 +48,11 @@ jobs:
         color: ${{ fromJSON(needs.define-matrix.outputs.colors) }}
 
     steps:
-      - name: Retrieve text - ${{ matrix.color }}
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ matrix.color }}
+    - name: Retrieve Artifact - ${{ matrix.color }}
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ matrix.color }}
 
-      - name: Retrieve image - ${{ matrix.color }}
-        uses: actions/download-artifact@v4
-        with:
-          name: draw-${{ matrix.color }}
-
-      - name: Report Color
-        run: |
-          cat color.txt
-
-      - name: Report image
-        run: |
-          stat draw.png
+    - name: Report Color
+      run: |
+        cat color.txt
