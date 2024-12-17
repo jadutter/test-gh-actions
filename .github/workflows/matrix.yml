@@ -1,9 +1,26 @@
 name: Matrix Workflow
 on:
+  push:
   workflow_dispatch:
   workflow_call:
 
 jobs:
+  setup-magick:
+    name: Check Magick
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Setup ImageMagick
+        uses: mfinelli/setup-imagemagick@v5
+      - name: List Fonts
+        run: magick -list font
+      - name: Create Test Image
+        run: magick -size 320x120 xc:lightblue  -draw "font DejaVu-Sans-Mono  font-size 72  fill purple  stroke navy  stroke-width 2  translate 0,80  text 0,0 ' test '"  test-draw.png
+      - name: Produce test-draw.png
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-draw.png
+          path: test-draw.png
+          if-no-files-found: ignore
   define-matrix:
     name: Define Matrix
     runs-on: ubuntu-20.04
@@ -18,21 +35,41 @@ jobs:
   produce-artifacts:
     name: Produce
     runs-on: ubuntu-20.04
-    needs: define-matrix
+    needs: 
+      - define-matrix
+      - setup-magick
     strategy:
+      fail-fast: false
       matrix:
         color: ${{ fromJSON(needs.define-matrix.outputs.colors) }}
     steps:
+      - name: Setup ImageMagick
+        uses: mfinelli/setup-imagemagick@v5
       - name: Define Color
         env:
           color: ${{ matrix.color }}
         run: |
           echo "the current color is '$color'" > color.txt
+      - name: Simulate Issue In One Node
+        env:
+          color: ${{ matrix.color }}
+        run: |
+          if [[ ${color} == "red" ]]; then 
+            echo "Problem with the color $color" >&2; 
+            exit 1; 
+          else
+            echo "No problem" >&2; 
+          fi
+      - name: Draw Color
+        env:
+          color: ${{ matrix.color }}
+        run: |
+          magick -size 320x120 xc:lightblue  -draw "font DejaVu-Sans-Mono  font-size 72  fill ${{ matrix.color }}  stroke black  stroke-width 2  translate 0,80  text 0,0 ' ${{ matrix.color }} '"  color.png
       - name: Produce Artifact - ${{ matrix.color }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.color }}
-          path: color.txt
+          path: color.*
           if-no-files-found: ignore
 
   consume-artifacts:
@@ -56,6 +93,7 @@ jobs:
   collate-artifacts:
     name: Collate
     runs-on: ubuntu-20.04
+    if: ${{ always() }}
     needs:
       - define-matrix
       - produce-artifacts
@@ -66,13 +104,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: colors
-          path: ${{ github.workspace }}/*/color.txt
+          path: ${{ github.workspace }}/*/color.*
           retention-days: 1
           if-no-files-found: error
 
   clean-artifacts:
     name: Clean
     runs-on: ubuntu-20.04
+    if: ${{ always() }}
     needs:
       - define-matrix
       - consume-artifacts
