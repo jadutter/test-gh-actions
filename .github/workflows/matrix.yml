@@ -59,6 +59,10 @@ jobs:
           name: ${{ matrix.color }}
           path: color.*
           if-no-files-found: ignore
+      - name: Simulate Issue In One Node
+        env:
+          color: ${{ matrix.color }}
+        run: test $color != "red"
 
   consume-artifacts:
     name: Consume
