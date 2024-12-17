@@ -67,5 +67,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: colors
-          path: ${{ github.workspace }}/artifact/*/color.txt
+          path: ${{ github.workspace }}/*/color.txt
           retention-days: 1
