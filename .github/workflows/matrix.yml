@@ -1,5 +1,6 @@
 name: Matrix Workflow
 on:
+  push:
   workflow_dispatch:
   workflow_call:
 
@@ -38,6 +39,7 @@ jobs:
       - define-matrix
       - setup-magick
     strategy:
+      fail-fast: false
       matrix:
         color: ${{ fromJSON(needs.define-matrix.outputs.colors) }}
     steps:
@@ -48,11 +50,6 @@ jobs:
           color: ${{ matrix.color }}
         run: |
           echo "the current color is '$color'" > color.txt
-      - name: Draw Color
-        env:
-          color: ${{ matrix.color }}
-        run: |
-          magick -size 320x120 xc:lightblue  -draw "font DejaVu-Sans-Mono  font-size 72  fill ${{ matrix.color }}  stroke black  stroke-width 2  translate 0,80  text 0,0 ' ${{ matrix.color }} '"  color.png
       - name: Simulate Issue In One Node
         env:
           color: ${{ matrix.color }}
@@ -63,6 +60,11 @@ jobs:
           else
             echo "No problem" >&2; 
           fi
+      - name: Draw Color
+        env:
+          color: ${{ matrix.color }}
+        run: |
+          magick -size 320x120 xc:lightblue  -draw "font DejaVu-Sans-Mono  font-size 72  fill ${{ matrix.color }}  stroke black  stroke-width 2  translate 0,80  text 0,0 ' ${{ matrix.color }} '"  color.png
       - name: Produce Artifact - ${{ matrix.color }}
         uses: actions/upload-artifact@v4
         with:
