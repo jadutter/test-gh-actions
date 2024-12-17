@@ -41,6 +41,8 @@ jobs:
       matrix:
         color: ${{ fromJSON(needs.define-matrix.outputs.colors) }}
     steps:
+      - name: Setup ImageMagick
+        uses: mfinelli/setup-imagemagick@v5
       - name: Define Color
         env:
           color: ${{ matrix.color }}
