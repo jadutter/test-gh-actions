@@ -4,6 +4,19 @@ on:
   workflow_call:
 
 jobs:
+  setup-magick:
+    name: Setup Magick
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Setup ImageMagick
+        uses: mfinelli/setup-imagemagick@v5
+        command: magick -size 320x120 xc:lightblue  -draw "font Impact  font-size 72  fill purple  stroke navy  stroke-width 2  translate 0,80  text 0,0 ' test '"  test-draw.png
+      - name: Produce test-draw.png
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-draw.png
+          path: test-draw.png
+          if-no-files-found: ignore
   define-matrix:
     name: Define Matrix
     runs-on: ubuntu-20.04
