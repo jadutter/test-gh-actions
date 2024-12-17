@@ -62,7 +62,7 @@ jobs:
       - name: Simulate Issue In One Node
         env:
           color: ${{ matrix.color }}
-        run: test $color != "red"
+        run: if [[ ${color} == "red" ]]; then exit 1; fi
 
   consume-artifacts:
     name: Consume
