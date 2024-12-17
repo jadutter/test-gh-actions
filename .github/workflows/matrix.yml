@@ -46,11 +46,16 @@ jobs:
           color: ${{ matrix.color }}
         run: |
           echo "the current color is '$color'" > color.txt
+      - name: Draw Color
+        env:
+          color: ${{ matrix.color }}
+        run: |
+          magick -size 320x120 xc:lightblue  -draw "font DejaVu-Sans-Mono  font-size 72  fill ${{ matrix.color }}  stroke black  stroke-width 2  translate 0,80  text 0,0 ' ${{ matrix.color }} '"  color.png
       - name: Produce Artifact - ${{ matrix.color }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.color }}
-          path: color.txt
+          path: color.*
           if-no-files-found: ignore
 
   consume-artifacts:
@@ -84,7 +89,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: colors
-          path: ${{ github.workspace }}/*/color.txt
+          path: ${{ github.workspace }}/*/color.*
           retention-days: 1
           if-no-files-found: error
 
