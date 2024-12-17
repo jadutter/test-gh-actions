@@ -33,8 +33,7 @@ jobs:
         with:
           name: ${{ matrix.color }}
           path: color.txt
-          retention-days: 1
-          # if-no-files-found: ignore
+          if-no-files-found: ignore
 
   consume-artifacts:
     name: Consume
@@ -69,3 +68,4 @@ jobs:
           name: colors
           path: ${{ github.workspace }}/*/color.txt
           retention-days: 1
+          if-no-files-found: error
