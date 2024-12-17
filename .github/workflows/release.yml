@@ -1,0 +1,27 @@
+name: Core
+on:
+  workflow_dispatch: {}
+  workflow_call: {}
+  push:
+    branches:
+      - develop
+  pull_request: {}
+
+jobs:
+  core:
+    uses: jadutter/test-gh-actions/.github/workflows/core.yml@develop
+  matrix:
+    uses: jadutter/test-gh-actions/.github/workflows/matrix.yml@develop
+  release:
+    name: Release
+    needs: [core, matrix]
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
+          with:
+              persist-credentials: false
+              fetch-depth: '0'
+
+        - name: Release
+          run: echo 'release the latest version'

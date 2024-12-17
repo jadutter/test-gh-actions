@@ -1,6 +1,5 @@
 name: Matrix
 on:
-  push:
   workflow_dispatch:
   workflow_call:
 
