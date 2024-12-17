@@ -14,7 +14,7 @@ jobs:
       - name: List Fonts
         run: magick -list font
       - name: Create Test Image
-        run: magick -size 320x120 xc:lightblue  -draw "font sans-serif  font-size 72  fill purple  stroke navy  stroke-width 2  translate 0,80  text 0,0 ' test '"  test-draw.png
+        run: magick -size 320x120 xc:lightblue  -draw "font DejaVu-Sans-Mono  font-size 72  fill purple  stroke navy  stroke-width 2  translate 0,80  text 0,0 ' test '"  test-draw.png
       - name: Produce test-draw.png
         uses: actions/upload-artifact@v4
         with:
