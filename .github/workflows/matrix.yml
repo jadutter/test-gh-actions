@@ -71,6 +71,12 @@ jobs:
           name: ${{ matrix.color }}
           path: color.*
           if-no-files-found: ignore
+      - name: Save Image Path
+        uses: actions/upload-artifact@v4
+        run: |
+          url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts/${artifact-id}"
+          echo "[image](${url})" >> "$GITHUB_STEP_SUMMARY"
+
 
   consume-artifacts:
     name: Consume
