@@ -22,10 +22,10 @@ jobs:
           name: test-draw.png
           path: test-draw.png
           if-no-files-found: ignore
-      - name: Save Image Path
-        run: |
-          url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts/${{ steps.artifact-upload-test-step.outputs.artifact-id }}"
-          echo "<img src=\"${url}\"/>" >> "$GITHUB_STEP_SUMMARY"
+      # - name: Save Image Path
+      #   run: |
+      #     url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts/${{ steps.artifact-upload-test-step.outputs.artifact-id }}"
+      #     echo "<img src=\"${url}\"/>" >> "$GITHUB_STEP_SUMMARY"
   define-matrix:
     name: Define Matrix
     runs-on: ubuntu-20.04
