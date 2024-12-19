@@ -16,16 +16,11 @@ jobs:
       - name: Create Test Image
         run: magick -size 320x120 xc:lightblue  -draw "font DejaVu-Sans-Mono  font-size 72  fill purple  stroke navy  stroke-width 2  translate 0,80  text 0,0 ' test '"  test-draw.png
       - name: Produce test-draw.png
-        id: artifact-upload-test-step
         uses: actions/upload-artifact@v4
         with:
           name: test-draw.png
           path: test-draw.png
           if-no-files-found: ignore
-      # - name: Save Image Path
-      #   run: |
-      #     url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts/${{ steps.artifact-upload-test-step.outputs.artifact-id }}"
-      #     echo "<img src=\"${url}\"/>" >> "$GITHUB_STEP_SUMMARY"
   define-matrix:
     name: Define Matrix
     runs-on: ubuntu-20.04
