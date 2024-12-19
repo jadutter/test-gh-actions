@@ -72,6 +72,7 @@ jobs:
           path: color.*
           if-no-files-found: ignore
 
+
   consume-artifacts:
     name: Consume
     runs-on: ubuntu-20.04
